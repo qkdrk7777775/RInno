@@ -25,7 +25,7 @@ get_Pandoc <- function(app_dir, Pandoc_version = rmarkdown::pandoc_version()) {
     cat(sprintf("Downloading Pandoc-%s ...\n", Pandoc_version))
     tryCatch(curl::curl_download(Pandoc_url, filename),error=function(e){
       tryCatch(curl::curl_download(gsub('windows','windows-x86_64',Pandoc_url),
-                                   gsub('windows','windows-x86_64',filename)),
+                                   filename),
                error=function(e){
                  cat(glue::glue("
                               {Pandoc_url} is not a valid URL.
