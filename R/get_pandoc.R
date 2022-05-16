@@ -15,7 +15,7 @@
 #' @export
 
 get_Pandoc <- function(app_dir, Pandoc_version = rmarkdown::pandoc_version()) {
-  Pandoc_url <- sprintf("https://github.com/jgm/pandoc/releases/download/%s/pandoc-%s-windows.msi", Pandoc_version, Pandoc_version)
+  Pandoc_url <- sprintf("https://github.com/jgm/pandoc/releases/%s/pandoc-%s-windows.msi", Pandoc_version, Pandoc_version)
 
   filename <- file.path(app_dir, sprintf("pandoc-%s-windows.msi", Pandoc_version))
 
@@ -23,10 +23,10 @@ get_Pandoc <- function(app_dir, Pandoc_version = rmarkdown::pandoc_version()) {
     cat("Using the copy of Pandoc already included:\n - ", filename, "\n")
   } else {
     cat(sprintf("Downloading Pandoc-%s ...\n", Pandoc_version))
-
-    tryCatch(curl::curl_download(Pandoc_url, filename),
-             error = function(e) {
-               cat(glue::glue("
+    tryCatch(curl::curl_download(Pandoc_url, filename),error=function(e){
+      tryCatch(curl::curl_download(Pandoc_url,gsub('windows','windows-x86_64',filename)),
+               error=function(e){
+                 cat(glue::glue("
                               {Pandoc_url} is not a valid URL.
 
                               This is likely to have happened because there was a change in the URL.
@@ -37,7 +37,8 @@ get_Pandoc <- function(app_dir, Pandoc_version = rmarkdown::pandoc_version()) {
 
                               - Thanks!
                               "))
-             })
+               })
+    })
 
     if (!file.exists(filename)) stop(glue::glue("{filename} failed to download."))
   }
