@@ -18,8 +18,8 @@ nativefy_app <- function(app_name, app_dir, nativefier_opts, app_icon = "default
   system(glue::glue("npm install nativefier -g"))
 
   # start the app in a separate R session
-  system(paste0("R -e ", '"shiny::runApp(', sprintf("'%s', port=%i)", app_dir, app_port)), wait = FALSE)
-
+  #system(paste0("R -e ", '"shiny::runApp(', sprintf("'%s', port=%i)", app_dir, app_port)), wait = FALSE)
+  system(paste0("R -e ", '"rmarkdown::run(',sprintf("'%s', port=%i)", app_dir, app_port)), wait = FALSE)
   # use nativefier to package it into an electron app
   oldwd <- getwd()
   setwd(app_dir)
