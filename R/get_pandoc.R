@@ -15,7 +15,7 @@
 #' @export
 
 get_Pandoc <- function(app_dir, Pandoc_version = rmarkdown::pandoc_version()) {
-  Pandoc_url <- sprintf("https://github.com/jgm/pandoc/releases/%s/pandoc-%s-windows.msi", Pandoc_version, Pandoc_version)
+  Pandoc_url <- sprintf("https://github.com/jgm/pandoc/releases/download/%s/pandoc-%s-windows.msi", Pandoc_version, Pandoc_version)
 
   filename <- file.path(app_dir, sprintf("pandoc-%s-windows.msi", Pandoc_version))
 
@@ -24,7 +24,8 @@ get_Pandoc <- function(app_dir, Pandoc_version = rmarkdown::pandoc_version()) {
   } else {
     cat(sprintf("Downloading Pandoc-%s ...\n", Pandoc_version))
     tryCatch(curl::curl_download(Pandoc_url, filename),error=function(e){
-      tryCatch(curl::curl_download(Pandoc_url,gsub('windows','windows-x86_64',filename)),
+      tryCatch(curl::curl_download(gsub('windows','windows-x86_64',Pandoc_url),
+                                   gsub('windows','windows-x86_64',filename)),
                error=function(e){
                  cat(glue::glue("
                               {Pandoc_url} is not a valid URL.
